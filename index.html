@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Las Voces del Río</title>
+    <style>
+        :root {
+            --bg-top: #a2d149;
+            --bg-bottom: #fbc02d;
+            --comic-outline: #000;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom, var(--bg-top), var(--bg-bottom));
+            overflow-x: hidden;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .page-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .river-svg-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .river-outline {
+            fill: none;
+            stroke: var(--comic-outline);
+            stroke-width: 210;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .river-fill {
+            fill: none;
+            stroke: url(#riverGradient);
+            stroke-width: 190;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .header {
+            padding: 50px 20px;
+            z-index: 20;
+            text-align: center;
+        }
+
+        .title-box {
+            background-color: rgba(144, 202, 249, 0.9);
+            padding: 20px 40px;
+            border: 3px solid #333;
+            box-shadow: 8px 8px 0px #333;
+            font-size: 2.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #fff;
+            text-shadow: 2px 2px #000;
+            margin-bottom: 30px;
+            display: inline-block;
+        }
+
+        .audio-intro {
+            background: white;
+            border: 3px solid #333;
+            padding: 15px;
+            margin: 0 auto 30px auto;
+            box-shadow: 5px 5px 0px #333;
+            border-radius: 8px;
+            max-width: 500px;
+            z-index: 20;
+            position: relative;
+        }
+
+        .intro-section {
+            max-width: 800px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.1);
+            text-align: left;
+            margin-bottom: 40px;
+            z-index: 20;
+            position: relative;
+        }
+
+        .people-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            max-width: 950px;
+            margin-bottom: 100px;
+            z-index: 20;
+            position: relative;
+        }
+
+        .person-box {
+            background: white;
+            border: 3px solid #333;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px #333;
+        }
+
+        .person-box summary {
+            list-style: none;
+            font-size: 2.8rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .person-box summary::after {
+            content: "(haz clic para leer)";
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+
+        .person-info-text {
+            font-size: 0.95rem;
+            margin-top: 12px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .river-content-area {
+            position: relative;
+            width: 100%;
+            height: 4800px;
+            z-index: 10;
+        }
+
+        .content-block, .audio-zigzag {
+            position: absolute;
+            width: 300px;
+            padding: 15px;
+            background: white;
+            border: 3px solid #333;
+            border-radius: 8px;
+            box-shadow: 6px 6px 0px #333;
+        }
+
+        .video-wrapper {
+            position: relative; padding-bottom: 56.25%; height: 0;
+            overflow: hidden; margin-top: 10px; border: 1px solid #000;
+        }
+
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        audio { width: 100%; margin-top: 10px; }
+
+        /* Posiciones Zigzag */
+        #v1 { top: 100px; left: 10%; }
+        #v2 { top: 600px; right: 10%; }
+        #a1 { top: 1100px; left: 15%; }
+        #a2 { top: 1500px; right: 15%; }
+        #a3 { top: 1900px; left: 15%; }
+        #a4 { top: 2300px; right: 15%; }
+        #a5 { top: 2700px; left: 15%; }
+        #a6 { top: 3100px; right: 15%; }
+        #a7 { top: 3500px; left: 15%; }
+        #a8 { top: 3900px; right: 15%; }
+
+        .footer-conclusion {
+            margin-top: -100px;
+            padding-bottom: 80px;
+            width: 100%;
+            text-align: center;
+            z-index: 30;
+            position: relative;
+        }
+
+        .final-box {
+            display: inline-block;
+            background: #2e1b17;
+            color: white;
+            padding: 35px;
+            border: 4px solid #fff;
+            max-width: 650px;
+            box-shadow: 12px 12px 0px #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <svg class="river-svg-background" preserveAspectRatio="none" viewBox="0 0 1000 6500">
+        <defs>
+            <linearGradient id="riverGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#7ee8fa;" />
+                <stop offset="85%" style="stop-color:#3e2723;" />
+                <stop offset="100%" style="stop-color:#1a0f0d;" />
+            </linearGradient>
+        </defs>
+        <path class="river-outline" d="M 500,0 L 500,400 C 900,800 100,1300 500,1800 C 900,2300 100,2800 500,3300 C 900,3800 100,4300 500,4800 C 900,5300 500,5800 500,6500" />
+        <path class="river-fill" d="M 500,0 L 500,400 C 900,800 100,1300 500,1800 C 900,2300 100,2800 500,3300 C 900,3800 100,4300 500,4800 C 900,5300 500,5800 500,6500" />
+    </svg>
+
+    <div class="header">
+        <div class="title-box">Las Voces del Río</div>
+
+        <div class="audio-intro">
+            <strong>🎙️ Escucha: "Yo nací aquí..."</strong><br>
+            <audio controls>
+                <source src="audios/Introducción%20Audio%20limpio.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+        
+        <div class="intro-section">
+            <p>Es importante resaltar que la Ciudad de México fue una ciudad lacustre. Esto significa que la ciudad tiene una forma de valle donde anteriormente había una gran cantidad de agua. Antes del asentamiento urbano, especialmente en la época prehispánica, existía una relación bastante equilibrada con el agua, ya que las personas organizaban sus actividades económicas en relación con este recurso.</p>
+            <p>Sin embargo, conforme fue creciendo la ciudad, particularmente después de la conquista y durante la colonia, el agua comenzó a ser expulsada de la ciudad. Desde ese periodo (alrededor del siglo XVI), las personas empezaron a desarrollar una relación más negativa con el agua.</p>
+            <p>Gran parte del agua que utilizamos actualmente proviene de los acuíferos, es decir, del agua subterránea que no es visible. Más del 60 % del agua que se utiliza en la Ciudad de México proviene de estas fuentes. No obstante, todavía existen algunos cuerpos de agua superficiales que cumplen funciones muy importantes.</p>
+        </div>
+
+        <div class="people-container">
+            <details class="person-box">
+                <summary>🧑‍🌾</summary>
+                <div class="person-info-text">
+                    <strong>Función de aprovisionamiento:</strong> Aunque generalmente no se utilizan como agua potable directa, sí sirven para actividades agrícolas, como el riego de cultivos o para dar de beber a los animales.
+                </div>
+            </details>
+
+            <details class="person-box">
+                <summary>🌡️</summary>
+                <div class="person-info-text">
+                    <strong>Regulación del clima:</strong> La presencia de agua modifica las condiciones de humedad y ayuda a mitigar efectos como el calentamiento urbano y el cambio climático.
+                </div>
+            </details>
+
+            <details class="person-box">
+                <summary>🌿</summary>
+                <div class="person-info-text">
+                    <strong>Función ecológica:</strong> Permiten la existencia de cierta flora y fauna. La presencia de agua favorece determinados tipos de vegetación y especies animales.
+                </div>
+            </details>
+
+            <details class="person-box">
+                <summary>👨‍👩‍👧‍👦</summary>
+                <div class="person-info-text">
+                    <strong>Función social:</strong> Históricamente, los ríos han sido espacios de convivencia y recreación. Las personas acudían a estos lugares para convivir, jugar o realizar actividades comunitarias.
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div class="river-content-area">
+        <div class="content-block" id="v1">
+            <strong>📹 Relato Visual 1</strong>
+            <div class="video-wrapper"><iframe src="URL_VIDEO_1"></iframe></div>
+        </div>
+        <div class="content-block" id="v2">
+            <strong>📹 Relato Visual 2</strong>
+            <div class="video-wrapper"><iframe src="URL_VIDEO_2"></iframe></div>
+        </div>
+
+        <div class="audio-zigzag" id="a1">
+            <strong>🎙️ Testimonio 1</strong>
+            <audio controls><source src="audios/Señor%20Juan%20recorte%20(Auri)%20FINAL%20ESTE%20ES%20EL%20BUENO%20PTM.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="audio-zigzag" id="a2">
+            <strong>🎙️ Testimonio 2</strong>
+            <audio controls><source src="audios/Piedra%20entrevista%20audio%20recortado%20Y%20LIMPIADO%20HIJOS%20DE%20SU%20COLA.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="audio-zigzag" id="a3">
+            <strong>🎙️ Testimonio 3</strong>
+            <audio controls><source src="audios/Señora%20Anónima%20enfermedades%20limpio%20alv.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="audio-zigzag" id="a4">
+            <strong>🎙️ Testimonio 4</strong>
+            <audio controls><source src="audios/Glorinella%20introducción%20presa%20Tejocote%20limpiado.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="audio-zigzag" id="a5">
+            <strong>🎙️ Testimonio 5</strong>
+            <audio controls><source src="audios/Glorinella%20niña%20enferma%201.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="audio-zigzag" id="a6">
+            <strong>🎙️ Testimonio 6</strong>
+            <audio controls><source src="audios/Glorinella%202%20Ropa%20y%20olor%20del%20río%20.mp3" type="audio/mpeg"></audio>
+        </div>
+        <div class="audio-zigzag" id="a7">
+            <strong>🎙️ Testimonio 7</strong>
+            <audio controls><source src="audios/Glorinella%203%20ropa%20sucia%20conclusión%20final.mp3" type="audio/mpeg"></audio>
+        </div>
+    </div>
+
+    <div class="footer-conclusion">
+        <div class="final-box">
+            <h3>CONCLUSIÓN</h3>
+            <p>El cauce termina, pero las voces siguen pidiendo recuperar la salud del río para asegurar un futuro sostenible para la comunidad.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
